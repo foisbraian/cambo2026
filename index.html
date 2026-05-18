@@ -2228,10 +2228,10 @@
 
       #hero {
         height: auto;
-        min-height: 80vh;
+        min-height: 90vh;
         grid-template-columns: 1fr;
-        padding-bottom: 40px;
-        background: linear-gradient(180deg, #080808 0%, #111 100%);
+        padding-bottom: 24px;
+        overflow: visible;
       }
 
       .hero-left,
@@ -2245,15 +2245,49 @@
       }
 
       .hero-bg-video {
-        display: none;
+        opacity: .9;
+        filter: saturate(1.05) contrast(1.05) brightness(0.88);
+        object-position: center top;
+      }
+
+      .hero-bg-overlay {
+        background: linear-gradient(to bottom, rgba(8, 8, 8, .25) 0%, rgba(8, 8, 8, .08) 40%, rgba(8, 8, 8, .55) 100%);
+        backdrop-filter: blur(1px);
       }
 
       .video-mosaic {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(5, minmax(140px, auto));
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        overflow-x: auto;
+        width: 100%;
+        padding-bottom: 16px;
+        gap: 12px;
         max-width: 100%;
         height: auto;
-        max-height: 520px;
+        max-height: 280px;
+        min-height: 200px;
+      }
+
+      .video-mosaic::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .video-mosaic::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, .18);
+        border-radius: 999px;
+      }
+
+      .v-card {
+        min-width: 230px;
+        min-height: 200px;
+        flex: 0 0 230px;
+      }
+
+      .v-card:nth-child(4),
+      .v-card:nth-child(5) {
+        grid-row: unset;
+        grid-column: unset;
       }
 
       .hero-stats {
@@ -2267,13 +2301,6 @@
         min-width: 0;
         align-items: flex-start;
         text-align: left;
-      }
-
-      .video-mosaic {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(5, minmax(180px, auto));
-        height: auto;
-        max-height: none;
       }
 
       .v-card:nth-child(4),
@@ -2359,8 +2386,22 @@
       }
 
       #agencias {
-        height: auto;
-        min-height: 100vh;
+        min-height: 85vh;
+        padding: 90px 6vw 36px;
+      }
+
+      .agencias-bg-video {
+        opacity: .68;
+        object-position: center center;
+        transform: scale(1.04);
+      }
+
+      .agencias-bg-overlay {
+        background-image:
+          radial-gradient(circle at 15% 50%, rgba(232, 25, 125, 0.06) 0%, transparent 40%),
+          radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.06) 0%, transparent 45%),
+          radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 120% 120%, 120% 120%, 20px 20px;
       }
 
       .agencias-grid {
@@ -2375,10 +2416,6 @@
 
       .ag-country.active {
         display: flex;
-      }
-
-      .agencias-bg-overlay {
-        background-size: cover, cover, 24px 24px;
       }
     }
   </style>
