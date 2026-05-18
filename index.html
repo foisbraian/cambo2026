@@ -35,6 +35,7 @@
 
     html {
       scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
     body {
@@ -43,6 +44,7 @@
       font-family: 'Bricolage Grotesque', sans-serif;
       overflow-x: hidden;
       cursor: none;
+      min-width: 100vw;
     }
 
     /* ─── CURSOR ─── */
@@ -2332,6 +2334,33 @@
         justify-content: center;
         gap: 12px;
         flex-wrap: wrap;
+      }
+
+      #quienes {
+        background-attachment: scroll;
+      }
+
+      #agencias {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .agencias-grid {
+        grid-template-columns: 1fr;
+        overflow-y: visible;
+        max-height: none;
+      }
+
+      .ag-country {
+        flex: none;
+      }
+
+      .ag-country.active {
+        display: flex;
+      }
+
+      .agencias-bg-overlay {
+        background-size: cover, cover, 24px 24px;
       }
     }
   </style>
