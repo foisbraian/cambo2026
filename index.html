@@ -2228,14 +2228,32 @@
 
       #hero {
         height: auto;
-        min-height: 100dvh;
+        min-height: 80vh;
         grid-template-columns: 1fr;
+        padding-bottom: 40px;
+        background: linear-gradient(180deg, #080808 0%, #111 100%);
       }
 
       .hero-left,
       .hero-right {
         height: auto;
-        padding: 110px 6vw 24px;
+        padding: 70px 6vw 24px;
+      }
+
+      .hero-right {
+        justify-content: flex-start;
+      }
+
+      .hero-bg-video {
+        display: none;
+      }
+
+      .video-mosaic {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, minmax(140px, auto));
+        max-width: 100%;
+        height: auto;
+        max-height: 520px;
       }
 
       .hero-stats {
@@ -2576,11 +2594,9 @@
 
   <section id="eventos" class="eventos-modern">
     <!-- Fondos dinámicos -->
-    <div class="ev-bg active" id="bg-dia" style="background-image: url('assets/eventos/DIA.png')"></div>
-    <div class="ev-bg" id="bg-tarde" style="background-image: url('assets/eventos/TARDE.png')"></div>
-    <div class="ev-bg" id="bg-noche" style="background-image: url('assets/eventos/NOCHE.png')"></div>
-
-    <div class="ev-overlay"></div>
+    <div class="ev-bg active" id="bg-dia" style="background-image: url('assets/EVENTOS/DIA.png')"></div>
+    <div class="ev-bg" id="bg-tarde" style="background-image: url('assets/EVENTOS/TARDE.png')"></div>
+    <div class="ev-bg" id="bg-noche" style="background-image: url('assets/EVENTOS/NOCHE.png')"></div>
 
     <div class="ev-content">
       <div class="eventos-header reveal">
