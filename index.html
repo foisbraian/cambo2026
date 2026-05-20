@@ -395,6 +395,12 @@
       grid-column: 3;
     }
 
+    /* ─── CAROUSEL ELEMENTS (hidden on desktop) ─── */
+    .hero-carousel-dots,
+    .hero-carousel-counter {
+      display: none;
+    }
+
     .v-card {
       position: relative;
       border-radius: 20px;
@@ -2371,6 +2377,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        overflow: visible;
       }
 
       .hero-bg-video {
@@ -2384,20 +2391,31 @@
         backdrop-filter: blur(1px);
       }
 
+      /* ─── MOBILE HERO CAROUSEL ─── */
       .video-mosaic {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
+        position: relative;
+        display: block;
         width: 100vw;
         margin-left: -6vw;
-        padding: 12px 6vw 24px;
-        gap: 16px;
-        height: auto;
-        min-height: 240px;
-        scrollbar-width: none;
+        height: 300px;
+        overflow: hidden;
+        border-radius: 0;
+        padding: 0;
+        gap: 0;
+        min-height: unset;
+        max-height: unset;
+      }
+
+      .video-mosaic::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 90px;
+        background: linear-gradient(to top, rgba(8, 8, 8, 0.75) 0%, transparent 100%);
+        z-index: 3;
+        pointer-events: none;
       }
 
       .video-mosaic::-webkit-scrollbar {
@@ -2405,26 +2423,105 @@
       }
 
       .v-card {
-        scroll-snap-align: center;
-        min-width: 250px;
-        height: 210px;
-        flex: 0 0 250px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        min-width: unset;
+        flex: unset;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        opacity: 0;
+        transform: scale(1.04);
+        transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        scroll-snap-align: unset;
+      }
+
+      .v-card.carousel-active {
+        opacity: 1;
+        transform: scale(1);
+        pointer-events: auto;
+        z-index: 2;
+      }
+
+      .v-card.carousel-active .v-play-hint {
+        opacity: 0.85;
       }
 
       .v-card:active {
-        transform: scale(0.96);
-        border-color: var(--pink);
-        box-shadow: 0 12px 32px rgba(232, 25, 125, 0.25);
+        transform: none;
+        border-color: transparent;
+        box-shadow: none;
       }
 
       .v-card:nth-child(4),
       .v-card:nth-child(5) {
         grid-row: unset;
         grid-column: unset;
+      }
+
+      .v-label {
+        padding: 55px 20px 18px;
+        z-index: 4;
+      }
+
+      .v-label-name {
+        font-size: 1.35rem;
+      }
+
+      .v-label-tag {
+        font-size: 0.7rem;
+      }
+
+      /* Carousel counter badge */
+      .hero-carousel-counter {
+        display: block;
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 5;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Carousel dots */
+      .hero-carousel-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+        padding: 0;
+      }
+
+      .hero-carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .hero-carousel-dot.active {
+        width: 24px;
+        border-radius: 12px;
+        background: var(--pink);
+        border-color: var(--pink);
+        box-shadow: 0 0 14px rgba(232, 25, 125, 0.5);
       }
 
       .hero-stats {
@@ -2674,6 +2771,7 @@
 
     <div class="hero-right">
       <div class="video-mosaic">
+        <div class="hero-carousel-counter" id="heroCarouselCounter">1 / 5</div>
         <div class="v-card" onclick="openModal(this)" data-src="assets/cascata.mp4" data-title="Cascatas"
           data-tag="Naturaleza">
           <video autoplay muted loop playsinline>
@@ -2741,6 +2839,7 @@
         </div>
 
       </div>
+      <div class="hero-carousel-dots" id="heroCarouselDots"></div>
     </div>
 
     <div class="scroll-indicator">
@@ -3996,7 +4095,14 @@
 
     /** Reanuda los videos de fondo cuando se cierra el modal */
     function resumeBackgroundVideos() {
-      document.querySelectorAll('.v-card video, .pw-item video').forEach(v => { v.play().catch(() => { }); });
+      if (window.innerWidth <= 960) {
+        /* Mobile: solo reanudar el video activo del carrusel */
+        const activeCard = document.querySelector('.v-card.carousel-active');
+        if (activeCard) { const v = activeCard.querySelector('video'); if (v) v.play().catch(() => {}); }
+        document.querySelectorAll('.pw-item video').forEach(v => { v.play().catch(() => { }); });
+      } else {
+        document.querySelectorAll('.v-card video, .pw-item video').forEach(v => { v.play().catch(() => { }); });
+      }
     }
 
     function openModal(card) {
@@ -4095,6 +4201,119 @@
       document.querySelectorAll('.ev-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('panel-' + time).classList.add('active');
     }
+
+    /* ── HERO MOBILE CAROUSEL ── */
+    (function() {
+      const mosaic = document.querySelector('.video-mosaic');
+      if (!mosaic) return;
+      const cards = Array.from(mosaic.querySelectorAll('.v-card'));
+      const dotsContainer = document.getElementById('heroCarouselDots');
+      const counter = document.getElementById('heroCarouselCounter');
+      const total = cards.length;
+      let current = 0;
+      let autoTimer = null;
+      let touchStartX = 0;
+      let touchDeltaX = 0;
+      const isMobile = () => window.innerWidth <= 960;
+
+      function createDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'hero-carousel-dot' + (i === 0 ? ' active' : '');
+          dot.addEventListener('click', () => goTo(i));
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function updateDots() {
+        if (!dotsContainer) return;
+        const dots = dotsContainer.querySelectorAll('.hero-carousel-dot');
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      }
+
+      function updateCounter() {
+        if (counter) counter.textContent = (current + 1) + ' / ' + total;
+      }
+
+      function goTo(index) {
+        if (!isMobile()) return;
+        const prevVid = cards[current].querySelector('video');
+        if (prevVid) { try { prevVid.pause(); } catch(e) {} }
+
+        current = ((index % total) + total) % total;
+
+        cards.forEach((card, i) => {
+          card.classList.toggle('carousel-active', i === current);
+        });
+
+        const curVid = cards[current].querySelector('video');
+        if (curVid) { curVid.currentTime = 0; curVid.play().catch(() => {}); }
+
+        updateDots();
+        updateCounter();
+        resetAuto();
+      }
+
+      function next() { goTo(current + 1); }
+      function prev() { goTo(current - 1); }
+
+      function resetAuto() {
+        clearInterval(autoTimer);
+        if (isMobile()) autoTimer = setInterval(next, 5000);
+      }
+
+      /* Swipe support */
+      mosaic.addEventListener('touchstart', e => {
+        if (!isMobile()) return;
+        touchStartX = e.changedTouches[0].screenX;
+        touchDeltaX = 0;
+      }, { passive: true });
+
+      mosaic.addEventListener('touchmove', e => {
+        if (!isMobile()) return;
+        touchDeltaX = e.changedTouches[0].screenX - touchStartX;
+      }, { passive: true });
+
+      mosaic.addEventListener('touchend', () => {
+        if (!isMobile()) return;
+        if (Math.abs(touchDeltaX) > 50) {
+          touchDeltaX < 0 ? next() : prev();
+        }
+        touchDeltaX = 0;
+      }, { passive: true });
+
+      function initCarousel() {
+        if (isMobile()) {
+          cards.forEach((card, i) => card.classList.toggle('carousel-active', i === current));
+          cards.forEach((card, i) => {
+            const v = card.querySelector('video');
+            if (!v) return;
+            if (i === current) { v.play().catch(() => {}); }
+            else { try { v.pause(); } catch(e) {} }
+          });
+          createDots();
+          updateCounter();
+          resetAuto();
+        } else {
+          cards.forEach(card => card.classList.remove('carousel-active'));
+          clearInterval(autoTimer);
+          cards.forEach(card => {
+            const v = card.querySelector('video');
+            if (v) v.play().catch(() => {});
+          });
+        }
+      }
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initCarousel, 200);
+      });
+
+      initCarousel();
+    })();
 
     /* ── FAQ ── */
     document.querySelectorAll('.faq-question').forEach(btn => {
