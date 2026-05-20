@@ -882,7 +882,7 @@
       border: 1px solid var(--border);
       padding: 16px 20px;
       border-radius: 12px;
-      flex: 0 0 200px;
+      flex: 0 1 fit-content;
     }
 
     .founder-name {
@@ -2186,6 +2186,7 @@
       border-radius: 10px;
     }
 
+
     .ag-card {
       display: flex;
       align-items: center;
@@ -2443,7 +2444,7 @@
         opacity: 1;
         transform: scale(1);
         pointer-events: auto;
-        z-index: 2;
+        z-index: 4;
       }
 
       .v-card.carousel-active .v-play-hint {
@@ -2463,12 +2464,14 @@
       }
 
       .v-label {
-        padding: 55px 20px 18px;
-        z-index: 4;
+        padding: 40px 20px 24px;
+        z-index: 5;
       }
 
       .v-label-name {
-        font-size: 1.35rem;
+        font-size: 1.1rem;
+        white-space: normal;
+        word-break: break-word;
       }
 
       .v-label-tag {
@@ -2698,8 +2701,7 @@
 
       .agencias-grid {
         grid-template-columns: 1fr;
-        overflow-y: visible;
-        max-height: none;
+        overflow-y: auto;
       }
 
       .ag-country {
@@ -2913,11 +2915,7 @@
       <div class="founders">
         <div class="founder-card">
           <div class="founder-name">Claudio González Kenner</div>
-          <div class="founder-role">Fundador & CEO</div>
-        </div>
-        <div class="founder-card">
-          <div class="founder-name">Luciana Sena</div>
-          <div class="founder-role">Directora de Operaciones</div>
+          <div class="founder-role">Fundador</div>
         </div>
       </div>
     </div>
