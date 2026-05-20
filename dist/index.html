@@ -35,6 +35,7 @@
 
     html {
       scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
     body {
@@ -43,6 +44,7 @@
       font-family: 'Bricolage Grotesque', sans-serif;
       overflow-x: hidden;
       cursor: none;
+      min-width: 100vw;
     }
 
     /* ─── CURSOR ─── */
@@ -143,6 +145,67 @@
       background: var(--pink-light);
       transform: translateY(-2px);
       box-shadow: 0 0 36px var(--pink-glow);
+    }
+
+    .nav-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, .45);
+      color: var(--white);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .25s, border-color .25s, background .25s;
+    }
+
+    .nav-toggle:hover {
+      transform: scale(1.02);
+      border-color: var(--pink);
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .nav-toggle span::before,
+    .nav-toggle span::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: currentColor;
+      border-radius: 999px;
+      left: 0;
+      transition: transform .25s;
+    }
+
+    .nav-toggle span::before {
+      top: -6px;
+    }
+
+    .nav-toggle span::after {
+      top: 6px;
+    }
+
+    .nav-toggle.open span {
+      background: transparent;
+    }
+
+    .nav-toggle.open span::before {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .nav-toggle.open span::after {
+      transform: translateY(-6px) rotate(-45deg);
     }
 
     /* ─── HERO ─── */
@@ -601,6 +664,91 @@
       width: 15px;
       height: 15px;
       fill: #fff;
+    }
+
+    /* Spinner & Error screen inside Video Modal */
+    .v-modal-loader {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .v-modal-loader .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(232, 25, 125, .15);
+      border-top-color: var(--pink);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 24px rgba(232, 25, 125, .3);
+    }
+
+    .v-modal-loader .loader-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .95rem;
+      color: rgba(255, 255, 255, .8);
+      letter-spacing: .05em;
+    }
+
+    .v-modal-error {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 8, 8, .95);
+      z-index: 101;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 22px;
+    }
+
+    .v-modal-error .error-icon {
+      width: 54px;
+      height: 54px;
+      color: var(--pink);
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 12px var(--pink-glow));
+    }
+
+    .v-modal-error .error-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: .02em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .v-modal-error .error-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, .65);
+      max-width: 320px;
+      margin-bottom: 24px;
+    }
+
+    .v-modal-error .error-btn {
+      padding: 10px 24px;
+      font-size: .85rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(232, 25, 125, .4);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     /* ─── BUTTONS ─── */
@@ -2121,38 +2269,267 @@
 
     /* ════════ RESPONSIVE ════════ */
     @media (max-width: 960px) {
+      nav {
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .nav-cta {
+        min-width: 150px;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+
+      .nav-links {
+        display: flex !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(8, 8, 8, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, .06);
+        border-bottom: 1px solid rgba(255, 255, 255, .06);
+        padding: 24px 6vw;
+        flex-direction: column;
+        gap: 16px;
+        z-index: 250;
+        transform: translateY(-15px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      }
+
+      .nav-links.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .nav-links li {
+        width: 100%;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 10px 0;
+        font-size: 1.05rem;
+      }
+
       #hero {
         height: auto;
-        min-height: 100dvh;
+        min-height: 95vh;
         grid-template-columns: 1fr;
+        padding-bottom: 32px;
+        overflow: visible;
+        background: radial-gradient(circle at 15% 15%, rgba(232, 25, 125, 0.12) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 75%, rgba(0, 240, 255, 0.08) 0%, transparent 45%),
+                    #080808;
       }
 
       .hero-left {
         height: auto;
-        padding: 110px 6vw 24px;
+        padding: 85px 6vw 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-badge {
+        margin: 0 auto 16px;
+      }
+
+      .hero-title {
+        font-size: clamp(2.3rem, 7.5vw, 3.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-sub {
+        font-size: 0.95rem;
+        max-width: 420px;
+        margin: 16px auto 24px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .hero-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
       }
 
       .hero-right {
         height: auto;
-        padding: 0 6vw 40px;
+        padding: 10px 6vw 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-bg-video {
+        opacity: .85;
+        filter: saturate(1.05) contrast(1.05) brightness(0.85);
+        object-position: center top;
+      }
+
+      .hero-bg-overlay {
+        background: linear-gradient(to bottom, rgba(8, 8, 8, .25) 0%, rgba(8, 8, 8, .12) 40%, rgba(8, 8, 8, .65) 100%);
+        backdrop-filter: blur(1px);
       }
 
       .video-mosaic {
-        height: 68vw;
-        max-height: 360px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        width: 100vw;
+        margin-left: -6vw;
+        padding: 12px 6vw 24px;
+        gap: 16px;
+        height: auto;
+        min-height: 240px;
+        scrollbar-width: none;
+      }
+
+      .video-mosaic::-webkit-scrollbar {
+        display: none;
+      }
+
+      .v-card {
+        scroll-snap-align: center;
+        min-width: 250px;
+        height: 210px;
+        flex: 0 0 250px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s;
+      }
+
+      .v-card:active {
+        transform: scale(0.96);
+        border-color: var(--pink);
+        box-shadow: 0 12px 32px rgba(232, 25, 125, 0.25);
+      }
+
+      .v-card:nth-child(4),
+      .v-card:nth-child(5) {
+        grid-row: unset;
+        grid-column: unset;
+      }
+
+      .hero-stats {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .hero-stats .stat {
+        min-width: 0;
+        align-items: center;
+        text-align: center;
       }
 
       #quienes {
         grid-template-columns: 1fr;
-        gap: 48px;
+        gap: 32px;
+        padding: 80px 6vw;
+        background-attachment: scroll;
       }
 
-      .eventos-grid {
+      .quienes-text {
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 32px 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .founders {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .founder-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin: 0;
+      }
+
+      .visual-card {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 24px;
+        padding: 32px 24px;
+        margin: 0;
+      }
+
+      .ev-grid {
         grid-template-columns: 1fr;
       }
 
-      .partners-grid {
-        grid-template-columns: 1fr;
+      .partners-wall {
+        flex-direction: column;
+        height: auto;
+        min-height: auto;
+        gap: 10px;
+        padding: 0 6vw 40px;
+      }
+
+      .partners-intro {
+        padding: 60px 6vw 32px;
+      }
+
+      .pw-item {
+        flex: none;
+        height: 160px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+
+      .pw-item+.pw-item {
+        border-left: none;
+        border-top: none;
+      }
+
+      .pw-item .pw-tag {
+        opacity: 0.85;
+        transform: translateY(0);
+      }
+
+      .pw-item .pw-name {
+        transform: translateY(0);
+        font-size: 1.35rem;
+      }
+
+      .pw-item .pw-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .pw-item::after {
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%) !important;
       }
 
       .faq-layout {
@@ -2164,8 +2541,77 @@
         position: static;
       }
 
-      .nav-links {
-        display: none;
+      .cta-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-primary,
+      .btn-ghost,
+      .btn-wa {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .ag-tabs {
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+      }
+
+      .ag-tabs::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      .ag-tabs::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, .2);
+        border-radius: 99px;
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      #agencias {
+        min-height: 85vh;
+        padding: 90px 6vw 36px;
+      }
+
+      .agencias-bg-video {
+        opacity: .68;
+        object-position: center center;
+        transform: scale(1.04);
+      }
+
+      .agencias-bg-overlay {
+        background-image:
+          radial-gradient(circle at 15% 50%, rgba(232, 25, 125, 0.06) 0%, transparent 40%),
+          radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.06) 0%, transparent 45%),
+          radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 120% 120%, 120% 120%, 20px 20px;
+      }
+
+      .agencias-grid {
+        grid-template-columns: 1fr;
+        overflow-y: visible;
+        max-height: none;
+      }
+
+      .ag-country {
+        flex: none;
+      }
+
+      .ag-country.active {
+        display: flex;
       }
     }
   </style>
@@ -2191,6 +2637,7 @@
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <a href="#contacto" class="nav-cta">¡Hablemos!</a>
+    <button class="nav-toggle" aria-label="Abrir menú"><span></span></button>
   </nav>
 
   <section id="hero">
@@ -2304,6 +2751,20 @@
   <!-- Video Modal -->
   <div class="v-modal-backdrop" id="videoModal">
     <div class="v-modal">
+      <!-- Premium Spinner Loader -->
+      <div class="v-modal-loader" id="modalLoader">
+        <div class="spinner-ring"></div>
+        <span class="loader-text">Cargando experiencia...</span>
+      </div>
+      <!-- Premium Error Screen -->
+      <div class="v-modal-error" id="modalError">
+        <svg viewBox="0 0 24 24" class="error-icon">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+        </svg>
+        <h3 class="error-title">Formato no Soportado</h3>
+        <p class="error-desc">Este video no se puede reproducir en este dispositivo o navegador. Puedes cerrar la ventana o intentar con otro contenido.</p>
+        <button class="btn-primary error-btn" id="modalErrorClose">Entendido</button>
+      </div>
       <video id="modalVideo" controls></video>
       <div class="v-modal-bar">
         <div>
@@ -2383,8 +2844,6 @@
     <div class="ev-bg active" id="bg-dia" style="background-image: url('/assets/DIA-BS-43Qsj.png')"></div>
     <div class="ev-bg" id="bg-tarde" style="background-image: url('/assets/TARDE-ntYa7cWs.png')"></div>
     <div class="ev-bg" id="bg-noche" style="background-image: url('/assets/NOCHE-D78stIBP.png')"></div>
-
-    <div class="ev-overlay"></div>
 
     <div class="ev-content">
       <div class="eventos-header reveal">
@@ -3482,6 +3941,21 @@
     /* ── NAV ── */
     window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', scrollY > 50));
 
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    navToggle?.addEventListener('click', () => {
+      navLinks?.classList.toggle('open');
+      navToggle.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks?.classList.remove('open');
+        navToggle?.classList.remove('open');
+      });
+    });
+
     /* ── HERO BG: freeze on last frame (no loop) ── */
     const heroBgVideo = document.getElementById('heroBgVideo');
     heroBgVideo.addEventListener('ended', () => { heroBgVideo.pause(); });
@@ -3490,7 +3964,30 @@
     const backdrop = document.getElementById('videoModal');
     const modalVideo = document.getElementById('modalVideo');
     const progressFill = document.getElementById('progressFill');
+    const modalLoader = document.getElementById('modalLoader');
+    const modalError = document.getElementById('modalError');
     let progTick;
+
+    // Eventos para spinner de carga y errores
+    modalVideo.addEventListener('waiting', () => {
+      modalLoader.style.display = 'flex';
+    });
+    modalVideo.addEventListener('loadstart', () => {
+      modalLoader.style.display = 'flex';
+      modalError.style.display = 'none';
+    });
+    modalVideo.addEventListener('playing', () => {
+      modalLoader.style.display = 'none';
+      modalError.style.display = 'none';
+    });
+    modalVideo.addEventListener('canplay', () => {
+      modalLoader.style.display = 'none';
+    });
+    modalVideo.addEventListener('error', () => {
+      modalLoader.style.display = 'none';
+      modalError.style.display = 'flex';
+    });
+    document.getElementById('modalErrorClose').addEventListener('click', closeModal);
 
     /** Pausa todos los videos de fondo cuando se abre el modal */
     function pauseBackgroundVideos() {
@@ -3505,10 +4002,27 @@
     function openModal(card) {
       document.getElementById('modalTitle').textContent = card.dataset.title;
       document.getElementById('modalTag').textContent = card.dataset.tag;
-      modalVideo.src = card.dataset.src;
+      
+      // Intentar obtener la URL real de video compilada/hasheada por Vite desde la etiqueta <source> interna.
+      const innerVid = card.querySelector('video');
+      const innerSrc = innerVid ? innerVid.querySelector('source') : null;
+      const targetSrc = innerSrc ? innerSrc.getAttribute('src') : (innerVid ? innerVid.getAttribute('src') : card.dataset.src);
+      
+      modalLoader.style.display = 'flex';
+      modalError.style.display = 'none';
+      modalVideo.src = targetSrc || card.dataset.src;
       modalVideo.muted = false;
       modalVideo.currentTime = 0;
-      modalVideo.play().catch(() => { modalVideo.muted = true; modalVideo.play(); });
+      
+      modalVideo.play().catch((err) => { 
+        console.warn("Auto-play failed, playing muted or fallback:", err);
+        modalVideo.muted = true; 
+        modalVideo.play().catch((e) => {
+          modalLoader.style.display = 'none';
+          modalError.style.display = 'flex';
+        }); 
+      });
+      
       syncIcons();
       backdrop.style.display = 'flex';
       backdrop.style.background = 'rgba(0,0,0,.9)';
@@ -3531,6 +4045,8 @@
       document.body.style.overflow = '';
       clearInterval(progTick);
       progressFill.style.width = '0%';
+      modalLoader.style.display = 'none';
+      modalError.style.display = 'none';
       setTimeout(() => { modalVideo.pause(); modalVideo.src = ''; }, 450);
       /* Reanudar videos de fondo al cerrar el modal */
       resumeBackgroundVideos();

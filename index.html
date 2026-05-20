@@ -666,6 +666,91 @@
       fill: #fff;
     }
 
+    /* Spinner & Error screen inside Video Modal */
+    .v-modal-loader {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .85);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .v-modal-loader .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(232, 25, 125, .15);
+      border-top-color: var(--pink);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 24px rgba(232, 25, 125, .3);
+    }
+
+    .v-modal-loader .loader-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .95rem;
+      color: rgba(255, 255, 255, .8);
+      letter-spacing: .05em;
+    }
+
+    .v-modal-error {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 8, 8, .95);
+      z-index: 101;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 22px;
+    }
+
+    .v-modal-error .error-icon {
+      width: 54px;
+      height: 54px;
+      color: var(--pink);
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 12px var(--pink-glow));
+    }
+
+    .v-modal-error .error-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: .02em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .v-modal-error .error-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, .65);
+      max-width: 320px;
+      margin-bottom: 24px;
+    }
+
+    .v-modal-error .error-btn {
+      padding: 10px 24px;
+      font-size: .85rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(232, 25, 125, .4);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     /* ─── BUTTONS ─── */
     .btn-primary {
       background: var(--pink);
@@ -2199,21 +2284,30 @@
       }
 
       .nav-links {
-        display: none;
+        display: flex !important;
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
-        background: rgba(8, 8, 8, .96);
-        border-top: 1px solid rgba(255, 255, 255, .08);
-        padding: 20px 6vw 24px;
+        background: rgba(8, 8, 8, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, .06);
+        border-bottom: 1px solid rgba(255, 255, 255, .06);
+        padding: 24px 6vw;
         flex-direction: column;
-        gap: 14px;
+        gap: 16px;
         z-index: 250;
+        transform: translateY(-15px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
       }
 
       .nav-links.open {
-        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
       }
 
       .nav-links li {
@@ -2222,66 +2316,109 @@
 
       .nav-links a {
         display: block;
-        padding: 12px 0;
-        font-size: 1rem;
+        padding: 10px 0;
+        font-size: 1.05rem;
       }
 
       #hero {
         height: auto;
-        min-height: 90vh;
+        min-height: 95vh;
         grid-template-columns: 1fr;
-        padding-bottom: 24px;
+        padding-bottom: 32px;
         overflow: visible;
+        background: radial-gradient(circle at 15% 15%, rgba(232, 25, 125, 0.12) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 75%, rgba(0, 240, 255, 0.08) 0%, transparent 45%),
+                    #080808;
       }
 
-      .hero-left,
+      .hero-left {
+        height: auto;
+        padding: 85px 6vw 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-badge {
+        margin: 0 auto 16px;
+      }
+
+      .hero-title {
+        font-size: clamp(2.3rem, 7.5vw, 3.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-sub {
+        font-size: 0.95rem;
+        max-width: 420px;
+        margin: 16px auto 24px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .hero-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
       .hero-right {
         height: auto;
-        padding: 70px 6vw 24px;
-      }
-
-      .hero-right {
-        justify-content: flex-start;
+        padding: 10px 6vw 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       .hero-bg-video {
-        opacity: .9;
-        filter: saturate(1.05) contrast(1.05) brightness(0.88);
+        opacity: .85;
+        filter: saturate(1.05) contrast(1.05) brightness(0.85);
         object-position: center top;
       }
 
       .hero-bg-overlay {
-        background: linear-gradient(to bottom, rgba(8, 8, 8, .25) 0%, rgba(8, 8, 8, .08) 40%, rgba(8, 8, 8, .55) 100%);
+        background: linear-gradient(to bottom, rgba(8, 8, 8, .25) 0%, rgba(8, 8, 8, .12) 40%, rgba(8, 8, 8, .65) 100%);
         backdrop-filter: blur(1px);
       }
 
       .video-mosaic {
         display: flex;
         flex-direction: row;
-        align-items: flex-end;
+        align-items: center;
         overflow-x: auto;
-        width: 100%;
-        padding-bottom: 16px;
-        gap: 12px;
-        max-width: 100%;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        width: 100vw;
+        margin-left: -6vw;
+        padding: 12px 6vw 24px;
+        gap: 16px;
         height: auto;
-        max-height: 280px;
-        min-height: 200px;
+        min-height: 240px;
+        scrollbar-width: none;
       }
 
       .video-mosaic::-webkit-scrollbar {
-        height: 8px;
-      }
-
-      .video-mosaic::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, .18);
-        border-radius: 999px;
+        display: none;
       }
 
       .v-card {
-        min-width: 230px;
-        min-height: 200px;
-        flex: 0 0 230px;
+        scroll-snap-align: center;
+        min-width: 250px;
+        height: 210px;
+        flex: 0 0 250px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s;
+      }
+
+      .v-card:active {
+        transform: scale(0.96);
+        border-color: var(--pink);
+        box-shadow: 0 12px 32px rgba(232, 25, 125, 0.25);
       }
 
       .v-card:nth-child(4),
@@ -2292,26 +2429,59 @@
 
       .hero-stats {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
         width: 100%;
+        margin-top: 12px;
       }
 
       .hero-stats .stat {
         min-width: 0;
-        align-items: flex-start;
-        text-align: left;
-      }
-
-      .v-card:nth-child(4),
-      .v-card:nth-child(5) {
-        grid-row: unset;
-        grid-column: unset;
+        align-items: center;
+        text-align: center;
       }
 
       #quienes {
         grid-template-columns: 1fr;
-        gap: 48px;
+        gap: 32px;
+        padding: 80px 6vw;
+        background-attachment: scroll;
+      }
+
+      .quienes-text {
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 32px 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .founders {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .founder-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 16px 20px;
+        margin: 0;
+      }
+
+      .visual-card {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 24px;
+        padding: 32px 24px;
+        margin: 0;
       }
 
       .ev-grid {
@@ -2322,14 +2492,44 @@
         flex-direction: column;
         height: auto;
         min-height: auto;
+        gap: 10px;
+        padding: 0 6vw 40px;
       }
 
       .partners-intro {
-        padding: 48px 6vw 32px;
+        padding: 60px 6vw 32px;
       }
 
       .pw-item {
-        min-height: 240px;
+        flex: none;
+        height: 160px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+
+      .pw-item+.pw-item {
+        border-left: none;
+        border-top: none;
+      }
+
+      .pw-item .pw-tag {
+        opacity: 0.85;
+        transform: translateY(0);
+      }
+
+      .pw-item .pw-name {
+        transform: translateY(0);
+        font-size: 1.35rem;
+      }
+
+      .pw-item .pw-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .pw-item::after {
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%) !important;
       }
 
       .faq-layout {
@@ -2379,10 +2579,6 @@
         justify-content: center;
         gap: 12px;
         flex-wrap: wrap;
-      }
-
-      #quienes {
-        background-attachment: scroll;
       }
 
       #agencias {
@@ -2555,6 +2751,20 @@
   <!-- Video Modal -->
   <div class="v-modal-backdrop" id="videoModal">
     <div class="v-modal">
+      <!-- Premium Spinner Loader -->
+      <div class="v-modal-loader" id="modalLoader">
+        <div class="spinner-ring"></div>
+        <span class="loader-text">Cargando experiencia...</span>
+      </div>
+      <!-- Premium Error Screen -->
+      <div class="v-modal-error" id="modalError">
+        <svg viewBox="0 0 24 24" class="error-icon">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+        </svg>
+        <h3 class="error-title">Formato no Soportado</h3>
+        <p class="error-desc">Este video no se puede reproducir en este dispositivo o navegador. Puedes cerrar la ventana o intentar con otro contenido.</p>
+        <button class="btn-primary error-btn" id="modalErrorClose">Entendido</button>
+      </div>
       <video id="modalVideo" controls></video>
       <div class="v-modal-bar">
         <div>
@@ -3695,8 +3905,8 @@
     <div>
       <img src="assets/logo.png" alt="Camboriú Estudiantil" style="height:36px" />
       <div class="footer-copy" style="margin-top:8px">© 2026 Camboriú Estudiantil. Todos los derechos reservados. -
-        Desarrollado por <a href="https://www.camboriuestudiantil.com" target="_blank"
-          rel="noopener noreferrer">Camboriú Estudiantil</a></div>
+        Desarrollado por <a href="https://bfmeridian.com" target="_blank"
+          rel="noopener noreferrer">BFMERIDIAN</a></div>
     </div>
     <div class="footer-links">
       <a href="#quienes">Nosotros</a><a href="#eventos">Eventos</a><a href="#descargas">Descargas</a><a
@@ -3754,7 +3964,30 @@
     const backdrop = document.getElementById('videoModal');
     const modalVideo = document.getElementById('modalVideo');
     const progressFill = document.getElementById('progressFill');
+    const modalLoader = document.getElementById('modalLoader');
+    const modalError = document.getElementById('modalError');
     let progTick;
+
+    // Eventos para spinner de carga y errores
+    modalVideo.addEventListener('waiting', () => {
+      modalLoader.style.display = 'flex';
+    });
+    modalVideo.addEventListener('loadstart', () => {
+      modalLoader.style.display = 'flex';
+      modalError.style.display = 'none';
+    });
+    modalVideo.addEventListener('playing', () => {
+      modalLoader.style.display = 'none';
+      modalError.style.display = 'none';
+    });
+    modalVideo.addEventListener('canplay', () => {
+      modalLoader.style.display = 'none';
+    });
+    modalVideo.addEventListener('error', () => {
+      modalLoader.style.display = 'none';
+      modalError.style.display = 'flex';
+    });
+    document.getElementById('modalErrorClose').addEventListener('click', closeModal);
 
     /** Pausa todos los videos de fondo cuando se abre el modal */
     function pauseBackgroundVideos() {
@@ -3769,10 +4002,27 @@
     function openModal(card) {
       document.getElementById('modalTitle').textContent = card.dataset.title;
       document.getElementById('modalTag').textContent = card.dataset.tag;
-      modalVideo.src = card.dataset.src;
+      
+      // Intentar obtener la URL real de video compilada/hasheada por Vite desde la etiqueta <source> interna.
+      const innerVid = card.querySelector('video');
+      const innerSrc = innerVid ? innerVid.querySelector('source') : null;
+      const targetSrc = innerSrc ? innerSrc.getAttribute('src') : (innerVid ? innerVid.getAttribute('src') : card.dataset.src);
+      
+      modalLoader.style.display = 'flex';
+      modalError.style.display = 'none';
+      modalVideo.src = targetSrc || card.dataset.src;
       modalVideo.muted = false;
       modalVideo.currentTime = 0;
-      modalVideo.play().catch(() => { modalVideo.muted = true; modalVideo.play(); });
+      
+      modalVideo.play().catch((err) => { 
+        console.warn("Auto-play failed, playing muted or fallback:", err);
+        modalVideo.muted = true; 
+        modalVideo.play().catch((e) => {
+          modalLoader.style.display = 'none';
+          modalError.style.display = 'flex';
+        }); 
+      });
+      
       syncIcons();
       backdrop.style.display = 'flex';
       backdrop.style.background = 'rgba(0,0,0,.9)';
@@ -3795,6 +4045,8 @@
       document.body.style.overflow = '';
       clearInterval(progTick);
       progressFill.style.width = '0%';
+      modalLoader.style.display = 'none';
+      modalError.style.display = 'none';
       setTimeout(() => { modalVideo.pause(); modalVideo.src = ''; }, 450);
       /* Reanudar videos de fondo al cerrar el modal */
       resumeBackgroundVideos();
