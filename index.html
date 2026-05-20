@@ -2469,9 +2469,11 @@
       }
 
       .v-label-name {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        line-height: 1.2;
         white-space: normal;
-        word-break: break-word;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
       }
 
       .v-label-tag {
@@ -2705,7 +2707,8 @@
       }
 
       .ag-country {
-        flex: none;
+        flex: 1;
+        min-height: 0;
       }
 
       .ag-country.active {
