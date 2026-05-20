@@ -2397,7 +2397,7 @@
         display: block;
         width: 100vw;
         margin-left: -6vw;
-        height: 300px;
+        height: 450px;
         overflow: hidden;
         border-radius: 0;
         padding: 0;
@@ -2464,16 +2464,15 @@
       }
 
       .v-label {
-        padding: 40px 20px 24px;
+        padding: 30px 20px 35px;
         z-index: 5;
+        width: 100%;
       }
 
       .v-label-name {
-        font-size: 1rem;
+        font-size: 1.2rem;
         line-height: 1.2;
         white-space: normal;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
       }
 
       .v-label-tag {
@@ -2683,7 +2682,9 @@
       }
 
       #agencias {
-        min-height: 85vh;
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
         padding: 90px 6vw 36px;
       }
 
@@ -2703,12 +2704,14 @@
 
       .agencias-grid {
         grid-template-columns: 1fr;
-        overflow-y: auto;
+        overflow-y: visible;
+        max-height: none;
       }
 
       .ag-country {
-        flex: 1;
-        min-height: 0;
+        flex: none;
+        display: none;
+        height: auto;
       }
 
       .ag-country.active {
